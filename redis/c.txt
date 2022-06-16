@@ -1,0 +1,26 @@
+master上执行127.0.0.1:6379> 
+info replication
+cluster nodes
+cluster info  显示ok才算正常
+cluster meet 192.168.1.4 6382  手动帮助主节点去发现其他两个节点
+redis-cli --cluster fix 127.0.0.1:6379 修复，可以帮助分配哈希槽
+
+
+#todo
+redis会重写配置文件（末尾），注意重启的时候删掉
+
+主从复制
+docker run -itd  -p 6379:6379 -v C:\Code\temp\redis\:/usr/local/etc/redis --name 6379-master1 redis:7.0.2 redis-server /usr/local/etc/redis/6379.conf
+docker run -itd  -p 6380:6380 -v C:\Code\temp\redis\:/usr/local/etc/redis --name 6380-slave1 redis:7.0.2 redis-server /usr/local/etc/redis/6380.conf
+docker run -itd  -p 6381:6381 -v C:\Code\temp\redis\:/usr/local/etc/redis --name 6381-slave1-1 redis:7.0.2 redis-server /usr/local/etc/redis/6381.conf
+docker run -itd  -p 6382:6382 -v C:\Code\temp\redis\:/usr/local/etc/redis --name 6382-slave2 redis:7.0.2 redis-server /usr/local/etc/redis/6382.conf
+
+
+docker run -itd -p 26379:26379 -v C:\Code\temp\redis\26379:/bitnami/redis-sentinel/conf/ --name sentinel1  bitnami/redis-sentinel:latest
+docker run -itd -p 26380:26380 -v C:\Code\temp\redis\26379:/bitnami/redis-sentinel/conf/ --name sentinel2  bitnami/redis-sentinel:latest
+docker run -itd -p 26381:26381 -v C:\Code\temp\redis\26379:/bitnami/redis-sentinel/conf/ --name sentinel3  bitnami/redis-sentinel:latest
+
+
+切片集群：
+cluster-enabled yes
+
